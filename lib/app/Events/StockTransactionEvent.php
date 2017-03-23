@@ -17,10 +17,10 @@ class StockTransactionEvent extends Event
      *
      * @return void
      */
-    public function __construct($data, $type, $store_id, $kind_of_transaction)
+    public function __construct($data, $transaction_qty_type, $store_id, $kind_of_transaction)
     {
         $this->transaction_data = $data;
-        $this->transaction_qty_type = $type;
+        $this->transaction_qty_type = $transaction_qty_type;
         $this->store_id = $store_id;
         $this->handle($kind_of_transaction);
     }
@@ -48,52 +48,31 @@ class StockTransactionEvent extends Event
                 $new_stock_id['stock_id'] = $new_stock->id;
                 $stock_items = $this->transaction_data['drugs'];
                 
-                foreach($stock_items as $stock_item){
-                    // add patient_id to drug
-                    
+                foreach($stock_items as $key => $stock_item){
                     $new_item = new StockItem;
                     $new_item->stock_id = $new_stock_id['stock_id'];
                     $new_item->batch_number = $stock_item['batch_number'];
                     $new_item->drug_id = $stock_item['drug_id'];
                     $new_item->store = $store;
-                    if($kind_of_transaction == 'dispense'){
-
-                        $new_item->unit_cost = 10; //temp only used to test dispense
-                        $new_item->expiry_date = '00:00:0000'; // temp only used because of dispense
-                        $new_item->quantity_packs = 10; //temp only used because of dispense
-                        $balance_before = 100;  //temp
-                        $new_item->balance_before = $balance_before;
-                        $quantity = 10;
-
-                    }else if($kind_of_transaction == 'plain'){
-                        $new_item->unit_cost = $stock_item['unit_cost'];
-                        $new_item->expiry_date = $stock_item['expiry_date'];
-                        $new_item->quantity_packs = $stock_item['quantity_packs'];
-                        if($stock_item['balance_before'] > 0){
-                            $balance_before = $stock_item['balance_before'];
-                        }else{
-                            $balance_before = 0;
-                        }
-                        $quantity = $stock_item['quantity'];
-                    }
-                    
-                    if($this->transaction_qty_type == 'in'){
-                        $new_item->quantity_in = $quantity;
+                    // $new_item->quantity_in = $drug['quantity_in'];
+                    // $new_item->comment = "hello";  
+                    $new_item->unit_cost = $stock_item['unit_cost'];
+                    $new_item->expiry_date = $stock_item['expiry_date'];
+                    $new_item->quantity_packs = $stock_item['quantity_packs'];
+                    if($stock_item['balance_before'] > 0){
+                        $balance_before = $stock_item['balance_before'];
                     }else{
-                        $new_item->quantity_out = $quantity;
+                        $balance_before = 0;
                     }
-                    $new_item->save();
-                    if($new_item->save()){
-                        $new_stock_item_id['stock_item_id'] = $new_item->id;
-                        if($kind_of_transaction == 'dispense'){
-                            event(new DispensePatientEvent($this->transaction_data, $new_stock_item_id));
-                        }
-                        return response()->json(['msg' => 'transacton done.']);
+                    $new_item->balance_before = $balance_before;
+                    if($this->transaction_qty_type == 'in'){
+                        $new_item->quantity_in = $stock_item['quantity'];
+                    }else{
+                        $new_item->quantity_out = $stock_item['quantity'];
                     }
+                    $new_item->save(); 
                 }
             }
-        }
-
-        
+        }        
     }
 }

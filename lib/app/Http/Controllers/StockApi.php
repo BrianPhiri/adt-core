@@ -90,7 +90,6 @@ class StockApi extends Controller
                 $transaction_qty_type = 'out';
             }
         } 
-        // return $input;
         event(new StockTransactionEvent($input, $transaction_qty_type, $store_id, $kind_of_transaction));
         return response()->json(['msg'=> 'Transaction complite', 'response'=> $input], 201);
     }
@@ -463,7 +462,21 @@ class StockApi extends Controller
                 $transaction_qty_type = 'out';
             }
         }
-        // return $input;
+        // $drugs = $input['drugs'];
+        // foreach($drugs as $key => $drug){
+        //     $new_item = new StockItem;
+        //     $new_item->drug_id = $drug['drug_id'];
+        //     $new_item->batch_number = $drug['batch_number']; 
+        //     $new_item->expiry_date = $drug['expiry_date'];
+        //     $new_item->quantity_packs = $drug['quantity_packs'];
+        //     $new_item->quantity_in = $drug['quantity_in'];
+        //     $new_item->balance_before = 0;
+        //     $new_item->unit_cost = $drug['unit_cost'];
+        //     $new_item->comment = "hello";  
+        //     $new_item->stock_id = 1;  
+        //     $new_item->save();         
+        // }
+        // return response()->json($a);
         event(new StockTransactionEvent($input, $transaction_qty_type, $store_id, $kind_of_transaction));
         return response()->json(['msg'=> 'Transaction complite', 'response'=> $input], 201);
     }
