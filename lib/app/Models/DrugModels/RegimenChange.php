@@ -20,7 +20,7 @@ class RegimenChange extends Model
     }
 
     public function last_regimen(){
-        return $this->belongsTo('App\Models\RegimenModels\Regimen', 'last_regimen_id');
+        return $this->belongsTo('App\Models\DrugModels\Regimen', 'last_regimen_id');
     }
 
     public function getChangeReasonNameAttribute(){

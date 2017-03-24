@@ -13,7 +13,7 @@ class User extends Model implements
     AuthorizableContract
 {
     use Authenticatable, Authorizable;
-    protected $table = 'tbl_user';
+    protected $table = 'tbl_users';
     /**
      * The attributes that are mass assignable.
      *

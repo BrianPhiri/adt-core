@@ -22,10 +22,10 @@ class StockTransactionEvent extends Event
         $this->transaction_data = $data;
         $this->transaction_qty_type = $transaction_qty_type;
         $this->store_id = $store_id;
-        $this->handle($kind_of_transaction);
+        $this->handle();
     }
 
-    public function handle($kind_of_transaction){
+    public function handle(){
         $new_stock = new Stock;
         $new_stock->transaction_time = $this->transaction_data['transaction_date'];
         $new_stock->ref_number = $this->transaction_data['ref_number'];
@@ -53,9 +53,7 @@ class StockTransactionEvent extends Event
                     $new_item->stock_id = $new_stock_id['stock_id'];
                     $new_item->batch_number = $stock_item['batch_number'];
                     $new_item->drug_id = $stock_item['drug_id'];
-                    $new_item->store = $store;
-                    // $new_item->quantity_in = $drug['quantity_in'];
-                    // $new_item->comment = "hello";  
+                    $new_item->store = $store; 
                     $new_item->unit_cost = $stock_item['unit_cost'];
                     $new_item->expiry_date = $stock_item['expiry_date'];
                     $new_item->quantity_packs = $stock_item['quantity_packs'];
