@@ -502,7 +502,7 @@ class StockApi extends Controller
                                  'tbl_stock.transaction_detail', 'tbl_stock.transaction_type_id', 'tbl_transaction_type.name as transaction_name',
                                  'tbl_stock_item.expiry_date', 'tbl_stock_item.quantity_packs', 'tbl_stock_item.total_cost'
                                )
-                       ->get()->unique('batch_number')->sortBy('expiry_date')->values();
+                       ->latest('tbl_stock_item.created_at')->get()->unique('batch_number')->sortBy('expiry_date')->values();
         }else if($date == 'all'){
             $current_date = '0000:00:00';
             $response = DB::table('tbl_store')
